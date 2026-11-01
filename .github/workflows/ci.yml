@@ -1,0 +1,50 @@
+name: Continuous Integration (CI)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  web-quality-check:
+    name: Next.js TypeScript Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install Dependencies
+        run: |
+          cd web
+          npm ci
+
+      - name: Run TypeScript Type Check
+        run: |
+          cd web
+          npx tsc --noEmit
+
+  recommendation-service-check:
+    name: Python FastAPI Service Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies & Verify Syntax
+        run: |
+          cd services/recommendation-service
+          pip install -r requirements.txt
+          python -m py_compile main.py
