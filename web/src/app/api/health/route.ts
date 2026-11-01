@@ -7,14 +7,20 @@ export async function GET() {
     // 1. Test MongoDB connection
     await connectToDatabase();
 
-    // 2. Test Redis cache: write and read a test key
-    await redis.set("health_test", "active", "EX", 10);
-    const redisVal = await redis.get("health_test");
+    // 2. Test Redis cache: write and read a test key (graceful fallback)
+    let redisStatus = "Redis Offline (Optional)";
+    try {
+      await redis.set("health_test", "active", "EX", 10);
+      const redisVal = await redis.get("health_test");
+      if (redisVal === "active") redisStatus = "Redis Connected";
+    } catch {
+      redisStatus = "Redis Offline (Optional)";
+    }
 
     return NextResponse.json({
       status: "healthy",
       database: "MongoDB Connected",
-      cache: redisVal === "active" ? "Redis Connected" : "Redis Error",
+      cache: redisStatus,
       timestamp: new Date().toISOString(),
     });
   } catch (error: unknown) {

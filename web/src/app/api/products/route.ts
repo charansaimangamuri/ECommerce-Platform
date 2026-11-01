@@ -26,13 +26,17 @@ export async function GET(req: NextRequest) {
     // 2. Redis Cache Key Generation
     const cacheKey = `catalog:${JSON.stringify({ q, categorySlug, brand, minPrice, maxPrice, rating, sort, page, limit })}`;
     
-    // Check Redis for cached result
-    const cachedData = await redis.get(cacheKey);
-    if (cachedData) {
-      return NextResponse.json({
-        ...JSON.parse(cachedData),
-        source: "cache (Redis)",
-      });
+    // Check Redis for cached result (with graceful fallback if Redis is unavailable)
+    try {
+      const cachedData = await redis.get(cacheKey);
+      if (cachedData) {
+        return NextResponse.json({
+          ...JSON.parse(cachedData),
+          source: "cache (Redis)",
+        });
+      }
+    } catch {
+      // Continue to query MongoDB directly if Redis is offline
     }
 
     // 3. Build MongoDB Match Filters
@@ -166,8 +170,12 @@ export async function GET(req: NextRequest) {
       },
     };
 
-    // 6. Cache response in Redis for 120 seconds (TTL)
-    await redis.set(cacheKey, JSON.stringify(responsePayload), "EX", 120);
+    // 6. Cache response in Redis for 120 seconds (TTL) if available
+    try {
+      await redis.set(cacheKey, JSON.stringify(responsePayload), "EX", 120);
+    } catch {
+      // Ignore cache write error if Redis is offline
+    }
 
     return NextResponse.json({
       ...responsePayload,
