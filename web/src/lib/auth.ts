@@ -2,7 +2,9 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://admin:password123@localhost:27017/ecommerce_db?authSource=admin";
+const MONGODB_URI =
+  process.env.MONGODB_URI ||
+  "mongodb://mangamuricharansai_db_user:NxTv8YYd0jbfgckO@ac-zcdgolq-shard-00-00.fl3dqxg.mongodb.net:27017,ac-zcdgolq-shard-00-01.fl3dqxg.mongodb.net:27017,ac-zcdgolq-shard-00-02.fl3dqxg.mongodb.net:27017/ecommerce_db?ssl=true&replicaSet=atlas-ppxndz-shard-0&authSource=admin";
 
 // Create native MongoClient for Better Auth adapter
 const client = new MongoClient(MONGODB_URI);

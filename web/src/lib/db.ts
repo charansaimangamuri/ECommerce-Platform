@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/ecommerce_db";
+const MONGODB_URI =
+  process.env.MONGODB_URI ||
+  "mongodb://mangamuricharansai_db_user:NxTv8YYd0jbfgckO@ac-zcdgolq-shard-00-00.fl3dqxg.mongodb.net:27017,ac-zcdgolq-shard-00-01.fl3dqxg.mongodb.net:27017,ac-zcdgolq-shard-00-02.fl3dqxg.mongodb.net:27017/ecommerce_db?ssl=true&replicaSet=atlas-ppxndz-shard-0&authSource=admin";
 
 interface MongooseCache {
   conn: typeof mongoose | null;
