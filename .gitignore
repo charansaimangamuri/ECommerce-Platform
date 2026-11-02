@@ -25,6 +25,8 @@ venv/
 .env
 .env.local
 .env.*.local
+*credenti*.txt
+*.docx
 
 # Logs & System Files
 npm-debug.log*
