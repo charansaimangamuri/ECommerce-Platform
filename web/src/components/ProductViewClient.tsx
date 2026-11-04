@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
-import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 
 interface ProductViewProps {
@@ -132,8 +131,7 @@ export default function ProductViewClient({ product }: ProductViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar searchQuery="" onSearchChange={() => {}} />
+    <div className="flex-1 flex flex-col">
       <CartDrawer />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-12">
