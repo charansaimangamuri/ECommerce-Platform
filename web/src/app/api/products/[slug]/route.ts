@@ -12,6 +12,10 @@ export async function GET(
     const { slug } = await params;
     await connectToDatabase();
 
+    // Prevent bundler tree-shaking and ensure Mongoose models are registered
+    void User.schema;
+    void Category.schema;
+
     const product = await Product.findOne({ slug, isPublished: true })
       .populate("category", "name slug")
       .populate("seller", "name storeName isSellerVerified")
@@ -23,6 +27,7 @@ export async function GET(
 
     return NextResponse.json({ product });
   } catch (error: unknown) {
+    console.error("Error fetching product by slug:", error);
     const message = error instanceof Error ? error.message : "Failed to fetch product";
     return NextResponse.json({ error: message }, { status: 500 });
   }

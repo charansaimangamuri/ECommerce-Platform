@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import User from "@/models/User";
+import Category from "@/models/Category";
+import Product from "@/models/Product";
+import Order from "@/models/Order";
 
 const MONGODB_URI =
   process.env.MONGODB_URI ||
@@ -21,6 +25,12 @@ if (!cached) {
 }
 
 export async function connectToDatabase(): Promise<typeof mongoose> {
+  // Ensure all Mongoose models are explicitly initialized and registered
+  void User.schema;
+  void Category.schema;
+  void Product.schema;
+  void Order.schema;
+
   if (cached!.conn) {
     return cached!.conn;
   }
